@@ -5,10 +5,12 @@ class watchController {
         try {
             const watches = await Watch.find({}).populate('brand');
             const brand = await Brand.find({})
+            const membername = req.session.membername;
             res.render('listwatch', {
                 title: 'List of Watches',
                 watchData: watches,
                 brandData: brand,
+                membername,
             });
         } catch (error) {
             console.error(error);
@@ -40,9 +42,13 @@ class watchController {
         try {
             const query = req.query.watchName;
             const watches = await Watch.find({ watchName: new RegExp(query, 'i') }).populate('brand');
+            const membername = req.session.membername;
+            const brand = await Brand.find({});
             res.render('listwatch', {
                 title: 'Search Results',
                 watchData: watches,
+                membername,
+                brandData: brand,
             });
         } catch (error) {
             console.error(error);
@@ -55,10 +61,12 @@ class watchController {
             const brandId = req.query.brand;
             const watches = await Watch.find({ brand: brandId }).populate('brand');
             const brand = await Brand.find({});
+            const membername = req.session.membername;
             res.render('listwatch', {
                 title: 'Filtered Watches',
                 watchData: watches,
                 brandData: brand,
+                membername,
             });
         } catch (error) {
             console.error(error);
