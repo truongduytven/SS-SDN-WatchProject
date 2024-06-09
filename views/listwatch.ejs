@@ -8,42 +8,76 @@
         <%= title %>
     </title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <style>
+        .optionItem {
+            color: black;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container is-widescreen">
         <section class="section">
-            <h1 class="title">List of watch</h1>
-            <h2 class="subtitle">
-                A simple container to divide your page into <strong>sections</strong>, like
-                the one you're currently reading.
-            </h2>
+            <a href="/watches"><h1 class="title">List of watch</h1></a>
+            <br>
+            <form action="/watches/search" method="get">
+                <div class="field has-addons">
+                    <div class="control is-expanded">
+                        <input class="input" type="text" name="watchName" placeholder="Search by watch name">
+                    </div>
+                    <div class="control">
+                        <button type="submit" class="button is-link">Search</button>
+                    </div>
+                </div>
+            </form>
+            <br>
+            <form action="/watches/filter" method="get">
+                <div class="field has-addons">
+                    <div class="control">
+                        <div class="select">
+                            <select name="brand">
+                                <option value="">Select Brand</option>
+                                <% brandData.forEach((brand) => { %>
+                                <option value="<%= brand._id %>"><%= brand.brandName %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <button type="submit" class="button is-link">Filter</button>
+                    </div>
+                </div>
+                
+            </form>
         </section>
         <div class="grid is-col-min-12 is-gap-8">
-            <% watchData.forEach((watch)=> { %>
-                <div class="cell">
-                    <a href="/watches/<%= watch._id %>">
-
-                        <div class="card">
-                            <div class="card-image">
-                                <figure class="image is-1by1">
-                                    <img src='<%= watch.image %>' alt="Placeholder image" />
-                                </figure>
-                            </div>
-                            <div class="card-content">
-                                <div class="media">
-                                    <div class="media-content">
-                                        <p class="title is-4">Name: <%= watch.watchName %>
-                                        </p>
-                                        <p class="subtitle is-6">Brand: <%= watch.brand.brandName %>
-                                        </p>
+            <% if(watchData.length> 0) { %>
+                <% watchData.forEach((watch)=> { %>
+                    <div class="cell">
+                        <a href="/watches/<%= watch._id %>">
+                            <div class="card">
+                                <div class="card-image">
+                                    <figure class="image is-3by2">
+                                        <img src='<%= watch.image %>' alt="Placeholder image" />
+                                    </figure>
+                                </div>
+                                <div class="card-content">
+                                    <div class="media">
+                                        <div class="media-content">
+                                            <p class="title is-4">Name: <%= watch.watchName %>
+                                            </p>
+                                            <p class="subtitle is-6">Brand: <%= watch.brand.brandName %>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-                </div>
-                <% }) %>
+                        </a>
+                    </div>
+                    <% }) %>
+                        <% } else { %>
+                        <h1>No watch found</h1>
+                    <% } %>
         </div>
     </div>
 </body>
