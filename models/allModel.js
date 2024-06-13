@@ -6,7 +6,7 @@ const brandSchema = new Schema({
 }, { timestamps: true });
 
 const commentSchema = new Schema({ 
-    rating: { type: Number, min: 1, max: 3, required: true },
+    rating: { type: Number, min: 1, max: 5, required: true },
     content: { type: String, required: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: "Member", required: true }
 }, { timestamps: true });
@@ -24,7 +24,9 @@ const watchSchema = new Schema({
 const memberSchema = new Schema({ 
     membername: { type: String, required: true },
     password: { type: String, required: true },
-    isAdmin: { type: Boolean, default: false }
+    isAdmin: { type: Boolean, default: false },
+    name: {type: String, required: true},
+    yob: { type: Number, required: true },
 }, { timestamps: true });
 
 const Brand = mongoose.model('Brand', brandSchema);

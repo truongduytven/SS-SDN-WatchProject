@@ -32,6 +32,18 @@
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label">Name</label>
+                            <div class="control">
+                                <input class="input" type="text" name="name" placeholder="Input Name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Year of birth</label>
+                            <div class="control">
+                                <input class="input" type="number" name="yob" placeholder="Input Year of Birth" required>
+                            </div>
+                        </div>
+                        <div class="field">
                             <label class="label">Password</label>
                             <div class="control">
                                 <input class="input" type="password" name="password" placeholder="Input Password" required>
@@ -48,6 +60,11 @@
             <div class="column">
                 <section class="section">
                     <h1 class="title">Login</h1>
+                    <% errors.forEach(function (error){ %>
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <%= error.msg %>
+                        </div>
+                    <% }); %>
                     <form action="/login" method="post">
                         <div class="field">
                             <label class="label">Username</label>

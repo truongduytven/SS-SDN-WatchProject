@@ -20,49 +20,130 @@
         <section class="section">
             <% if (membername) { %>
                 <h1>Welcome, <%= membername %>!</h1>
-            <% } %>
-            <div class="columns is-vcentered">
-                <div class="column">
-                    <a href="/watches"><h1 class="title">List of watch</h1></a>
-                </div>
-                <div class="column is-narrow">
-                    <div class="buttons">             
-                        <a href="/logout" class="button">Logout</a>
-                        <a href="/profile" class="button is-link">Edit Profile</a>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <form action="/watches/search" method="get">
-                <div class="field has-addons">
-                    <div class="control is-expanded">
-                        <input class="input" type="text" name="watchName" placeholder="Search by watch name">
-                    </div>
-                    <div class="control">
-                        <button type="submit" class="button is-link">Search</button>
-                    </div>
-                </div>
-            </form>
-            <br>
-            <form action="/watches/filter" method="get">
-                <div class="field has-addons">
-                    <div class="control">
-                        <div class="select">
-                            <select name="brand">
-                                <option value="">Select Brand</option>
-                                <% brandData.forEach((brand) => { %>
-                                <option value="<%= brand._id %>"><%= brand.brandName %></option>
-                                <% }) %>
-                            </select>
+                <% } %>
+                    <div class="columns is-vcentered">
+                        <div class="column">
+                            <a href="/watches">
+                                <h1 class="title">List of watch</h1>
+                            </a>
+                        </div>
+                        <div class="column is-narrow">
+                            <div class="buttons">
+                                <a href="/logout" class="button">Logout</a>
+                                <a href="/profile" class="button is-link">Edit Profile</a>
+                                <a href="/brands" class="button is-warning">Manage Brand</a>
+                                <a href="/accounts" class="button is-info">Manage Member</a>
+                                <button class="button is-primary" id="add-watch-button">Add Watch</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="control">
-                        <button type="submit" class="button is-link">Filter</button>
-                    </div>
-                </div>
-                
-            </form>
+                    <br>
+                    <form action="/watches/search" method="get">
+                        <div class="field has-addons">
+                            <div class="control is-expanded">
+                                <input class="input" type="text" name="watchName" placeholder="Search by watch name">
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-link">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+                    <form action="/watches/filter" method="get">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <div class="select">
+                                    <select name="brand">
+                                        <option value="">Select Brand</option>
+                                        <% brandData.forEach((brand)=> { %>
+                                            <option value="<%= brand._id %>">
+                                                <%= brand.brandName %>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-link">Filter</button>
+                            </div>
+                        </div>
+
+                    </form>
         </section>
+
+        <!-- Add Watch Modal -->
+        <div class="modal" id="add-watch-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                    <h1 class="subtitle has-text-centered">Add new watch</h1>
+                    <form action="/watches" method="post">
+                        <div class="field">
+                            <label class="label">Watch Name</label>
+                            <div class="control">
+                                <input class="input" type="text" name="watchName" placeholder="Watch Name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Image URL</label>
+                            <div class="control">
+                                <input class="input" type="text" name="image" placeholder="Image URL" required>
+                            </div>
+                        </div>
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="field">
+                                    <label class="label">Price</label>
+                                    <div class="control">
+                                        <input class="input" type="number" name="price" placeholder="Price" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    <label class="label">Automatic</label>
+                                    <div class="control">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="Automatic"> Yes
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="field">
+                                    <label class="label">Brand</label>
+                                    <div class="control">
+                                        <div class="select">
+                                            <select name="brand" required>
+                                                <% brandData.forEach((brand)=> { %>
+                                                    <option value="<%= brand._id %>">
+                                                        <%= brand.brandName %>
+                                                    </option>
+                                                    <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                        <div class="field">
+                            <label class="label">Watch Description</label>
+                            <div class="control">
+                                <textarea class="textarea" name="watchDescription" placeholder="Watch Description"
+                                    required></textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button type="submit" class="button is-link">Add Watch</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+
         <div class="columns is-multiline is-variable is-8">
             <% if(watchData.length> 0) { %>
                 <% watchData.forEach((watch)=> { %>
@@ -89,10 +170,24 @@
                     </div>
                     <% }) %>
                         <% } else { %>
-                        <h1>No watch found</h1>
-                    <% } %>
+                            <h1>No watch found</h1>
+                            <% } %>
         </div>
     </div>
+
+    <script>
+        document.getElementById('add-watch-button').addEventListener('click', function () {
+            document.getElementById('add-watch-modal').classList.add('is-active');
+        });
+
+        document.querySelector('.modal-close').addEventListener('click', function () {
+            document.getElementById('add-watch-modal').classList.remove('is-active');
+        });
+
+        document.querySelector('.modal-background').addEventListener('click', function () {
+            document.getElementById('add-watch-modal').classList.remove('is-active');
+        });
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <section class="section">
+            <div class="columns is-vcentered">
+                <div class="column">
+                    <a href="/accounts">
+                        <h1 class="title">
+                            <%= title %>
+                        </h1>
+                    </a>
+                </div>
+                <div class="column is-narrow">
+                    <div class="buttons">
+                        <a href="/watches" class="button"><- Return to list of watches</a>
+                    </div>
+                </div>
+            </div>
+            <div class="columns is-centered">
+                <div class="column is-half">
+                    <table class="table is-fullwidth has-text-centered">
+                        <thead>
+                            <tr>
+                                <th class="has-text-centered is-warning"><abbr title="Position">Pos</abbr></th>
+                                <th class="has-text-centered is-link">Member Name</th>
+                                <th class="has-text-centered is-success">Name</th>
+                                <th class="has-text-centered is-danger">Year of birth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% memberlist.forEach((member, index)=> { %>
+                                <tr>
+                                    <th class="has-text-centered">
+                                        <%= (index + 1) %>
+                                    </th>
+                                    <td>
+                                        <%= member.membername %>
+                                    </td>
+                                    <td>
+                                        <%= member.name %>
+                                    </td>
+                                    <td>
+                                        <%= member.yob %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

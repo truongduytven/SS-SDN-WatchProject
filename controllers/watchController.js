@@ -1,4 +1,4 @@
-const { Watch, Brand, Member } = require('../models/allModel')
+const { Watch, Brand, Member, Comment } = require('../models/allModel')
 
 class watchController {
     async getAll(req, res) {
@@ -26,12 +26,23 @@ class watchController {
                     model: 'Member'
                 }
             });
+            const memberId = req.session.memberId;
+            var existingComment = false;
+            watch.comments.forEach(comment => {
+                if (comment.author._id.toString() === memberId ) {
+                    existingComment = true;
+                }
+            })
+            const brandData = await Brand.find({})
             if (!watch) {
                 return res.status(404).send('Watch not found')
             }
             res.render('watchDetail', {
                 title: `Details of ${watch.watchName}`,
                 watchData: watch,
+                watchID: req.params.id,
+                brandData: brandData,
+                existingComment,
             });
         } catch (error) {
             console.error(error);
@@ -68,6 +79,100 @@ class watchController {
                 brandData: brand,
                 membername,
             });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error: ' + error.message);
+        }
+    }
+    async addWatch(req, res) {
+        try {
+            const { watchName, image, price, Automatic, watchDescription, brand } = req.body;
+
+            // Validate inputs
+            if (!watchName || !image || !price || !watchDescription || !brand) {
+                return res.status(400).send('All fields are required');
+            }
+
+            // Create a new watch
+            const newWatch = new Watch({
+                watchName,
+                image,
+                price,
+                Automatic: Automatic === 'on',
+                watchDescription,
+                brand,
+            });
+
+            await newWatch.save();
+
+            res.redirect('/watches');
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error: ' + error.message);
+        }
+    }
+    async updateWatch(req, res) {
+        try {
+            const { id } = req.params;
+            const { watchName, image, price, Automatic, watchDescription, brand } = req.body;
+
+            // Validate inputs
+            if (!watchName || !image || !price || !watchDescription || !brand) {
+                return res.status(400).send('All fields are required');
+            }
+
+            // Find and update the watch
+            const watch = await Watch.findById(id);
+            if (!watch) {
+                return res.status(404).send('Watch not found');
+            }
+
+            watch.watchName = watchName;
+            watch.image = image;
+            watch.price = price;
+            watch.Automatic = Automatic === 'on';
+            watch.watchDescription = watchDescription;
+            watch.brand = brand;
+
+            await watch.save();
+
+            res.redirect(`/watches/${id}`);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error: ' + error.message);
+        }
+    }
+    async deleteWatch(req, res) {
+        try {
+            const { id } = req.params;
+            const watch = await Watch.findByIdAndDelete(id);
+            if (!watch) {
+                return res.status(404).send('Watch not found');
+            }
+            res.redirect('/watches')
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error: ' + error.message);
+        }
+    }
+    async addComment(req, res) {
+        const watchId = req.params.id;
+        const { content, rating } = req.body;
+        const memberId = req.session.memberId;
+        try {
+            const watch = await Watch.findById(watchId);
+
+            const newComment = new Comment({
+                content,
+                rating,
+                author: memberId
+            });
+
+            watch.comments.push(newComment);
+            await newComment.save();
+            await watch.save();
+
+            res.redirect(`/watches/${watchId}`);
         } catch (error) {
             console.error(error);
             res.status(500).send('Error: ' + error.message);

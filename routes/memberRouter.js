@@ -10,5 +10,6 @@ memberRouter.post('/login', memberController.loginMember)
 memberRouter.get('/logout', memberController.logoutMember)
 memberRouter.get('/profile', memberController.getMemberInfo);
 memberRouter.post('/profile', memberController.editMemberInfo);
+memberRouter.get('/accounts', memberController.getAccount)
 
 module.exports = memberRouter
