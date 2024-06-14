@@ -1,5 +1,7 @@
 const express = require('express');
-const memberController = require('../controllers/memberController')
+const memberController = require('../controllers/memberController');
+const checkAdmin = require('../controllers/middleWareController')
+const authenticateToken = require('../controllers/middleWareController');
 const memberRouter = express.Router()
 
 memberRouter.get('/', function (req, res, next) {

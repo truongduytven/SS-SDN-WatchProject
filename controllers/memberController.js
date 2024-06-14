@@ -1,5 +1,6 @@
 const { Watch, Member, Comment } = require('../models/allModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 
 class memberController {
     async registerMember(req, res) {
@@ -81,10 +82,20 @@ class memberController {
                     errors,
                 });
             } else {
-                // Set session
+                // const accessToken = jwt.sign({ 
+                //     membername: member.membername, 
+                //     isAdmin: member.isAdmin }, '2003', 
+                // { expiresIn: '1h'});
+                // // Set session
+                // res.json({
+                //     memberName: member.membername,
+                //     memberId: member._id,
+                //     isAdmin: member.isAdmin,
+                //     accessToken: accessToken,
+                // },)
                 req.session.memberId = member._id;
                 req.session.isAdmin = member.isAdmin;
-                req.session.membername = username;
+                req.session.membername = member.membername;
                 res.redirect('/watches');
             }
         } catch (error) {

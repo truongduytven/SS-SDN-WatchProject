@@ -65,7 +65,7 @@
                             <%= error.msg %>
                         </div>
                     <% }); %>
-                    <form action="/login" method="post">
+                    <form action="/login" method="post" id="loginForm">
                         <div class="field">
                             <label class="label">Username</label>
                             <div class="control">
@@ -88,6 +88,32 @@
             </div>
         </div>
     </div>
+    <!-- <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const username = formData.get('username');
+            const password = formData.get('password');
+            
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+            
+            const data = await response.json();
+            
+            if (data.accessToken) {
+                localStorage.setItem('accessToken', data.accessToken);
+                window.location.href ="/watches"; // Redirect to /watches
+            } else {
+                alert('Login failed');
+            }
+        });
+    </script> -->
 </body>
 
 </html>

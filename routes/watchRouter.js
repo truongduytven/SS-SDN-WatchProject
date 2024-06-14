@@ -1,9 +1,10 @@
 var express = require('express');
 const watchController = require('../controllers/watchController');
+const authenticateToken = require('../controllers/middleWareController');
 var watchRouter = express.Router()
 
 watchRouter.route('/')
-    .get(watchController.getAll)
+    .get(authenticateToken, watchController.getAll)
     .post(watchController.addWatch)
 
 watchRouter.route('/search')
@@ -21,4 +22,5 @@ watchRouter.route('/delete/:id')
 
 watchRouter.route('/comment/:id')
     .post(watchController.addComment)
+    
 module.exports = watchRouter;
