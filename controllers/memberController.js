@@ -1,8 +1,12 @@
 const { Watch, Member, Comment } = require('../models/allModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
+var passport = require('passport');
 
 class memberController {
+    getHome(req, res, next) {
+        res.render('index', { title: 'Watch project', errors: [] });
+    }
     async registerMember(req, res) {
         try {
             const { username, password, name, yob } = req.body;
@@ -42,10 +46,7 @@ class memberController {
                 });
                 newMember.save();
                 // Save the user to the database
-                req.session.memberId = newMember._id;
-                req.session.isAdmin = newMember.isAdmin;
-                req.session.membername = username;
-                res.redirect('/watches');
+                res.redirect('/auth/login');
             }
         } catch (error) {
             console.error(error);
@@ -53,7 +54,7 @@ class memberController {
         }
     }
 
-    async loginMember(req, res) {
+    async loginMember(req, res, next) {
         try {
             const { username, password } = req.body;
             let errors = []
@@ -72,44 +73,39 @@ class memberController {
             }
 
             // Check if the password matches
-            const isMatch = await bcrypt.compare(password, member.password);
-            if (!isMatch) {
-                errors.push({ msg: 'Invalid username or password' });
+            if (member) {
+                const isMatch = await bcrypt.compare(password, member.password);
+                if (!isMatch) {
+                    errors.push({ msg: 'Invalid username or password' });
+                }
             }
             if (errors.length > 0) {
-                res.render('index', {
+                return res.render('index', {
                     title: 'Watch project',
                     errors,
                 });
-            } else {
-                // const accessToken = jwt.sign({ 
-                //     membername: member.membername, 
-                //     isAdmin: member.isAdmin }, '2003', 
-                // { expiresIn: '1h'});
-                // // Set session
-                // res.json({
-                //     memberName: member.membername,
-                //     memberId: member._id,
-                //     isAdmin: member.isAdmin,
-                //     accessToken: accessToken,
-                // },)
-                req.session.memberId = member._id;
-                req.session.isAdmin = member.isAdmin;
-                req.session.membername = member.membername;
-                res.redirect('/watches');
             }
+
+            req.session.memberId = member._id;
+            req.session.isAdmin = member.isAdmin;
+            req.session.membername = member.membername;
+            passport.authenticate('local', {
+                successRedirect: '/watches',
+                failureRedirect: '/',
+                failureFlash: true
+            })(req, res, next);
+
+
+
         } catch (error) {
             console.error(error);
             res.status(500).send('Server error');
         }
     }
     async logoutMember(req, res) {
-        req.session.destroy((err) => {
-            if (err) {
-                return res.status(500).send('Failed to logout');
-            }
-            res.redirect('/');
-        });
+        req.session.flash('success_msg', 'You are logged out');
+        req.session.destroy();
+        res.redirect('/');
     }
     async getMemberInfo(req, res) {
         const membername = req.session.membername;

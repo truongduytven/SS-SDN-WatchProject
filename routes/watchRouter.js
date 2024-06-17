@@ -1,10 +1,12 @@
 var express = require('express');
 const watchController = require('../controllers/watchController');
 const authenticateToken = require('../controllers/middleWareController');
+const passport = require('passport');
 var watchRouter = express.Router()
+const { ensureAuthenticated } = require('../config/auth')
 
 watchRouter.route('/')
-    .get(authenticateToken, watchController.getAll)
+    .get(ensureAuthenticated, watchController.getAll)
     .post(watchController.addWatch)
 
 watchRouter.route('/search')

@@ -1,119 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <style>
-        .alert {
-            color: red;
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            scrollbar-width: none;
+        }
+        
+        .full-screen-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://dcassetcdn.com/design_img/3080524/587367/587367_17038361_3080524_4a495b72_image.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="columns">
-            <div class="column">
-                <section class="section">
-                    <h1 class="title">Register</h1>
-                    <% errors.forEach(function (error){ %>
-                        <div class="alert alert-warning alert-dismissible" role="alert">
-                            <%= error.msg %>
-                        </div>
-                    <% }); %>
-                    <form action="/register" method="post">
-                        <div class="field">
-                            <label class="label">Username</label>
-                            <div class="control">
-                                <input class="input" type="text" name="username" placeholder="Input Username" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Name</label>
-                            <div class="control">
-                                <input class="input" type="text" name="name" placeholder="Input Name" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Year of birth</label>
-                            <div class="control">
-                                <input class="input" type="number" name="yob" placeholder="Input Year of Birth" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Password</label>
-                            <div class="control">
-                                <input class="input" type="password" name="password" placeholder="Input Password" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-link" type="submit">Register</button>
-                            </div>
-                        </div>
-                    </form>
-                </section>
-            </div>
-            <div class="column">
-                <section class="section">
-                    <h1 class="title">Login</h1>
-                    <% errors.forEach(function (error){ %>
-                        <div class="alert alert-warning alert-dismissible" role="alert">
-                            <%= error.msg %>
-                        </div>
-                    <% }); %>
-                    <form action="/login" method="post" id="loginForm">
-                        <div class="field">
-                            <label class="label">Username</label>
-                            <div class="control">
-                                <input class="input" type="text" name="username" placeholder="Input username" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Password</label>
-                            <div class="control">
-                                <input class="input" type="password" name="password" placeholder="Input Password" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-link" type="submit">Login</button>
-                            </div>
-                        </div>
-                    </form>
-                </section>
-            </div>
-        </div>
-    </div>
-    <!-- <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const username = formData.get('username');
-            const password = formData.get('password');
-            
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
-            
-            const data = await response.json();
-            
-            if (data.accessToken) {
-                localStorage.setItem('accessToken', data.accessToken);
-                window.location.href ="/watches"; // Redirect to /watches
-            } else {
-                alert('Login failed');
-            }
-        });
-    </script> -->
+    <%- include('navbar') -%>
+    <div class="full-screen-bg"></div>
 </body>
-
 </html>

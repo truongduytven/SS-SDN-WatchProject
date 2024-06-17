@@ -4,9 +4,7 @@ const checkAdmin = require('../controllers/middleWareController')
 const authenticateToken = require('../controllers/middleWareController');
 const memberRouter = express.Router()
 
-memberRouter.get('/', function (req, res, next) {
-    res.render('index', { title: 'Watch project', errors: [] });
-});
+memberRouter.get('/', memberController.getHome);
 memberRouter.post('/register', memberController.registerMember)
 memberRouter.post('/login', memberController.loginMember)
 memberRouter.get('/logout', memberController.logoutMember)

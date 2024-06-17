@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <style>
+        .alert {
+            color: red;
+        }
+
+        .card {
+            width: 50%;
+        }
+
+        .layout {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="layout">
+            <div class="card">
+                <section class="section">
+                    <h1 class="title">Register</h1>
+                    <% errors.forEach(function (error){ %>
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <%= error.msg %>
+                        </div>
+                        <% }); %>
+                            <form action="/register" method="post">
+                                <div class="field">
+                                    <label class="label">Username</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="username" placeholder="Input Username"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label">Name</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="name" placeholder="Input Name" required>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label">Year of birth</label>
+                                    <div class="control">
+                                        <input class="input" type="number" name="yob" placeholder="Input Year of Birth"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label">Password</label>
+                                    <div class="control">
+                                        <input class="input" type="password" name="password"
+                                            placeholder="Input Password" required>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control">
+                                        <button class="button is-link" type="submit">Register</button>
+                                    </div>
+                                </div>
+                            </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

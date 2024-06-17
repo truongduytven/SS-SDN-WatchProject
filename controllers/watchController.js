@@ -5,7 +5,8 @@ class watchController {
         try {
             const watches = await Watch.find({}).populate('brand');
             const brand = await Brand.find({})
-            const membername = req.session.membername;
+            const membername = req.session.passport.user.name;
+        
             res.render('listwatch', {
                 title: 'List of Watches',
                 watchData: watches,

@@ -10,9 +10,15 @@ var usersRouter = require('./routes/users');
 var brandRouter = require('./routes/brandRouter');
 var watchRouter = require('./routes/watchRouter');
 var membersRouter = require('./routes/memberRouter');
+var authRouter = require('./routes/authRouter');
+
+const passport = require('passport');
+const flash = require('connect-flash');
+
 
 const mongoose = require('mongoose');
 var app = express();
+require('./config/passport')(passport);
 
 const url = 'mongodb://localhost:27017/MemberAuth'
 mongoose.connect(url).then((db) => {
@@ -29,16 +35,28 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-  secret: 'yourSecretKey',
+  secret: 'secret',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   store: MongoStore.create({
     mongoUrl: url,
     collectionName: 'sessions'
   })
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+app.use(function (req, res, next) {
+  console.log('Session Data:', req.session); 
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
+
 
 app.use('/', membersRouter);
+app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/brands', brandRouter);
 app.use('/watches', watchRouter);

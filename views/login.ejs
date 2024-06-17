@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <style>
+        .alert {
+            color: red;
+        }
+
+        .card {
+            width: 50%;
+        }
+
+        .layout {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- login.ejs -->
+    <div class="container">
+        <div class="layout">
+            <div class="card">
+                <section class="section">
+                    <h1 class="title">Login</h1>
+                    <% errors.forEach(function (error){ %>
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <%= error.msg %>
+                        </div>
+                        <% }); %>
+                            <form action="/login" method="post" id="loginForm">
+                                <div class="field">
+                                    <label class="label">Username</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="username" placeholder="Input username"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label">Password</label>
+                                    <div class="control">
+                                        <input class="input" type="password" name="password"
+                                            placeholder="Input Password" required>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control">
+                                        <button class="button is-link" type="submit">Login</button>
+                                    </div>
+                                </div>
+                            </form>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const username = formData.get('username');
+            const password = formData.get('password');
+            
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+            
+            const data = await response.json();
+            
+            if (data.accessToken) {
+                localStorage.setItem('accessToken', data.accessToken);
+                window.location.href ="/watches"; // Redirect to /watches
+            } else {
+                alert('Login failed');
+            }
+        });
+    </script> -->
+</body>
+
+</html>
