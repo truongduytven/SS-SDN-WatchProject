@@ -1,7 +1,6 @@
 const { Watch, Member, Comment } = require('../models/allModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
-var passport = require('passport');
 
 class memberController {
     getHome(req, res, next) {
@@ -79,9 +78,6 @@ class memberController {
                 }
                 // Save the updated member information
                 await member.save();
-                req.session.memberId = member._id;
-                req.session.isAdmin = member.isAdmin;
-                req.session.membername = username;
                 res.redirect('/profile');
             }
         } catch (error) {

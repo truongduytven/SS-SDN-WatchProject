@@ -4,14 +4,11 @@ class watchController {
     async getAll(req, res) {
         try {
             const watches = await Watch.find({}).populate('brand');
-            const brand = await Brand.find({})
-            const membername = req.session.passport.user.name;
-        
+            const brand = await Brand.find({});
             res.render('listwatch', {
                 title: 'List of Watches',
                 watchData: watches,
                 brandData: brand,
-                membername,
             });
         } catch (error) {
             console.error(error);
@@ -27,13 +24,15 @@ class watchController {
                     model: 'Member'
                 }
             });
-            const memberId = req.session.memberId;
+            const user = res.locals.user;
             var existingComment = false;
-            watch.comments.forEach(comment => {
-                if (comment.author._id.toString() === memberId ) {
-                    existingComment = true;
-                }
-            })
+            if (watch.comments.length > 0) {
+                watch.comments.forEach(comment => {
+                    if (comment.author._id.toString() === user._id.toString()) {
+                        existingComment = true;
+                    }
+                })
+            }
             const brandData = await Brand.find({})
             if (!watch) {
                 return res.status(404).send('Watch not found')
@@ -71,15 +70,18 @@ class watchController {
     async filter(req, res) {
         try {
             const brandId = req.query.brand;
-            const watches = await Watch.find({ brand: brandId }).populate('brand');
-            const brand = await Brand.find({});
-            const membername = req.session.membername;
-            res.render('listwatch', {
-                title: 'Filtered Watches',
-                watchData: watches,
-                brandData: brand,
-                membername,
-            });
+            if (!brandId) {
+                req.flash('error', 'Please enter a brand');
+                res.redirect('/watches')
+            } else {
+                const watches = await Watch.find({ brand: brandId }).populate('brand');
+                const brand = await Brand.find({});
+                res.render('listwatch', {
+                    title: 'Filtered Watches',
+                    watchData: watches,
+                    brandData: brand,
+                });
+            }
         } catch (error) {
             console.error(error);
             res.status(500).send('Error: ' + error.message);
@@ -91,7 +93,8 @@ class watchController {
 
             // Validate inputs
             if (!watchName || !image || !price || !watchDescription || !brand) {
-                return res.status(400).send('All fields are required');
+                req.flash('error', 'Please full fill when add new watch');
+                return res.redirect('/watches');
             }
 
             // Create a new watch
@@ -105,8 +108,8 @@ class watchController {
             });
 
             await newWatch.save();
-
             res.redirect('/watches');
+
         } catch (error) {
             console.error(error);
             res.status(500).send('Error: ' + error.message);
@@ -119,7 +122,8 @@ class watchController {
 
             // Validate inputs
             if (!watchName || !image || !price || !watchDescription || !brand) {
-                return res.status(400).send('All fields are required');
+                req.flash('error', 'Please full fill when add new watch');
+                return res.redirect(`/watches/${id}`);
             }
 
             // Find and update the watch
@@ -159,14 +163,14 @@ class watchController {
     async addComment(req, res) {
         const watchId = req.params.id;
         const { content, rating } = req.body;
-        const memberId = req.session.memberId;
+        const user = res.locals.user;
         try {
             const watch = await Watch.findById(watchId);
 
             const newComment = new Comment({
                 content,
                 rating,
-                author: memberId
+                author: user._id,
             });
 
             watch.comments.push(newComment);

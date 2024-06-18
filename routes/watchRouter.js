@@ -1,28 +1,26 @@
 var express = require('express');
 const watchController = require('../controllers/watchController');
-const authenticateToken = require('../controllers/middleWareController');
-const passport = require('passport');
 var watchRouter = express.Router()
-const { ensureAuthenticated } = require('../config/auth')
+const { ensureAuthenticated, checkAdmin } = require('../config/auth')
 
 watchRouter.route('/')
     .get(ensureAuthenticated, watchController.getAll)
-    .post(watchController.addWatch)
+    .post(ensureAuthenticated, checkAdmin, watchController.addWatch)
 
 watchRouter.route('/search')
-    .get(watchController.search);
+    .get(ensureAuthenticated, watchController.search);
 
 watchRouter.route('/filter')
-    .get(watchController.filter);
+    .get(ensureAuthenticated, watchController.filter);
 
 watchRouter.route('/:id')
-    .get(watchController.getDetail)
-    .post(watchController.updateWatch)
+    .get(ensureAuthenticated, watchController.getDetail)
+    .post(ensureAuthenticated, checkAdmin, watchController.updateWatch)
     
 watchRouter.route('/delete/:id')
-    .post(watchController.deleteWatch)
+    .post(ensureAuthenticated, checkAdmin, watchController.deleteWatch)
 
 watchRouter.route('/comment/:id')
-    .post(watchController.addComment)
+    .post(ensureAuthenticated, watchController.addComment)
     
 module.exports = watchRouter;

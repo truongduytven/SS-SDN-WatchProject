@@ -1,3 +1,7 @@
+const { Member } = require('../models/allModel');
+const bcrypt = require('bcrypt');
+var passport = require('passport');
+
 class authController {
     getLogin(req, res) {
         res.render('login', { title: 'Login', errors: [] });
@@ -97,11 +101,14 @@ class authController {
             res.status(500).send('Server error');
         }
     }
-    async logoutMember(req, res) {
-        req.session.flash('success_msg', 'You are logged out');
-        req.session.destroy();
-        res.redirect('/');
+    logoutMember(req, res, next) {
+        req.logout(function (err) {
+            if (err) { return next(err); }
+            req.flash('success_msg', 'You are logged out');
+            res.redirect('/users/login');
+        });
     }
+
 }
 
 module.exports = new authController()

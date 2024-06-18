@@ -1,6 +1,5 @@
 const express = require('express');
 const authController = require('../controllers/authController');
-const memberController = require('../controllers/memberController');
 const authRouter = express.Router()
 
 authRouter.route('/login')
@@ -12,6 +11,6 @@ authRouter.route('/register')
 .post(authController.registerMember)
 
 authRouter.route('/logout')
-.post(authController.logoutMember)
+.get(authController.logoutMember)
 
 module.exports = authRouter

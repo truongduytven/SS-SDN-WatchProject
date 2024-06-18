@@ -6,7 +6,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var usersRouter = require('./routes/users');
 var brandRouter = require('./routes/brandRouter');
 var watchRouter = require('./routes/watchRouter');
 var membersRouter = require('./routes/memberRouter');
@@ -51,13 +50,18 @@ app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
+  if(req.session.passport) {
+    res.locals.user = req.session.passport.user;
+  }
   next();
 });
 
 
 app.use('/', membersRouter);
+app.use('/notfound', function(req, res, next) {
+  res.render('notfound')
+})
 app.use('/auth', authRouter);
-app.use('/users', usersRouter);
 app.use('/brands', brandRouter);
 app.use('/watches', watchRouter);
 

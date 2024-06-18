@@ -8,6 +8,7 @@
         <%= title %>
     </title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         .image-watch {
             border-radius: 30px;
@@ -15,6 +16,10 @@
 
         #watch-name {
             font-weight: bold;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
         }
 
         .media-content {
@@ -61,12 +66,24 @@
             <div class="column">
                 <div class="media">
                     <div class="media-content">
-                        <p class="subtitle is-1" id="watch-name">
-                            <%= watchData.watchName %>
-                        </p>
+                        <span class="subtitle is-1" id="watch-name">
+                            <span>
+                                <%= watchData.watchName %>
+                            </span>
+                            <% if(watchData.Automatic) { %>
+                                <span class="icon has-text-success">
+                                    <i class="fas fa-cogs"></i>
+                                </span>
+                            <% } else { %>
+                                <span class="icon has-text-success">
+                                    <i class="fas fa-battery-full"></i>
+                                </span>
+                            <% } %>
+                        </span>
                         <p class="subtitle is-5">Brand: <%= watchData.brand.brandName %>
                         </p>
                         <p class="subtitle is-6">Price: <%= watchData.price %> $</p>
+
                         <p class="subtitle is-6">Description: <%= watchData.watchDescription %>
                         </p>
                         <p class="subtitle is-6">Comments: <%= watchData.comments.length %>
