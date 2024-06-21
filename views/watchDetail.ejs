@@ -12,6 +12,7 @@
     <style>
         .image-watch {
             border-radius: 30px;
+            object-fit: cover;
         }
 
         #watch-name {
@@ -66,6 +67,18 @@
             <div class="column">
                 <div class="media">
                     <div class="media-content">
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <% if(success_msg !='' ){ %>
+                                <%= success_msg %>
+                                    <% } %>
+                                        <% if(error_msg !='' ){ %>
+                                            <%= error %>
+                                                <% } %>
+
+                                                    <% if(error !='' ){ %>
+                                                        <%= error %>
+                                                            <% } %>
+                        </div>
                         <span class="subtitle is-1" id="watch-name">
                             <span>
                                 <%= watchData.watchName %>
@@ -74,17 +87,17 @@
                                 <span class="icon has-text-success">
                                     <i class="fas fa-cogs"></i>
                                 </span>
-                            <% } else { %>
-                                <span class="icon has-text-success">
-                                    <i class="fas fa-battery-full"></i>
-                                </span>
-                            <% } %>
+                                <% } else { %>
+                                    <span class="icon has-text-success">
+                                        <i class="fas fa-battery-full"></i>
+                                    </span>
+                                    <% } %>
                         </span>
                         <p class="subtitle is-5">Brand: <%= watchData.brand.brandName %>
                         </p>
                         <p class="subtitle is-6">Price: <%= watchData.price %> $</p>
 
-                        <p class="subtitle is-6">Description: <%= watchData.watchDescription %>
+                        <p class="subtitle is-6 has-text-centered">Description: <%= watchData.watchDescription %>
                         </p>
                         <p class="subtitle is-6">Comments: <%= watchData.comments.length %>
                         </p>
@@ -95,13 +108,14 @@
                                         Comment by: <%= comment.author.membername %>
                                     </div>
                                     <div class="content">
-                                        Rating: <%= comment.rating %>/5
+                                        Rating: <%= comment.rating %>/3
                                     </div>
                                     <div class="content">
                                         Comment: <%= comment.content %>
                                     </div>
                                 </div>
                             </div>
+
                             <% }) %>
                                 <% if (!existingComment) { %>
                                     <form action="/watches/comment/<%= watchData._id %>" method="post" class="box">
@@ -124,8 +138,6 @@
                                                                 <option value="1">1</option>
                                                                 <option value="2">2</option>
                                                                 <option value="3">3</option>
-                                                                <option value="4">4</option>
-                                                                <option value="5">5</option>
                                                             </select>
                                                         </div>
                                                     </div>

@@ -87,10 +87,6 @@ class authController {
                     errors: errors,
                 });
             }
-
-            req.session.memberId = member._id;
-            req.session.isAdmin = member.isAdmin;
-            req.session.membername = member.membername;
             passport.authenticate('local', {
                 successRedirect: '/watches',
                 failureRedirect: '/',
@@ -104,8 +100,8 @@ class authController {
     logoutMember(req, res, next) {
         req.logout(function (err) {
             if (err) { return next(err); }
-            req.flash('success_msg', 'You are logged out');
-            res.redirect('/users/login');
+            req.flash('success_msg', 'You are logged out successfully');
+            res.redirect('/auth/login');
         });
     }
 

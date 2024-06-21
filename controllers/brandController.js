@@ -21,7 +21,8 @@ class brandController {
 
             // Validate inputs
             if (!brandName) {
-                return res.status(400).send('All fields are required');
+                req.flash('error','Please enter a brand name')
+                return res.redirect('brands');
             }
 
             // Create a new watch
@@ -30,7 +31,7 @@ class brandController {
             });
 
             await newBrand.save();
-
+            req.flash('success_msg', 'Successfully added brand')
             res.redirect('/brands');
         } catch (error) {
             console.error(error);

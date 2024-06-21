@@ -6,7 +6,7 @@ const memberRouter = express.Router()
 
 memberRouter.get('/', memberController.getHome);
 memberRouter.get('/profile', ensureAuthenticated, memberController.getMemberInfo);
-memberRouter.post('/profile', ensureAuthenticated, memberController.editMemberInfo);
+memberRouter.post('/profile/:id', ensureAuthenticated, memberController.editMemberInfo);
 memberRouter.get('/accounts', ensureAuthenticated, checkAdmin, memberController.getAccount)
 
 module.exports = memberRouter

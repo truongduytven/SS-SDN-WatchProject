@@ -7,8 +7,7 @@ class memberController {
         res.render('index', { title: 'Watch project', errors: [] });
     }
     async getMemberInfo(req, res) {
-        const membername = req.session.membername;
-        const memberId = req.session.memberId;
+        const memberId = req.session.passport.user._id;
         const watches = await Watch.find({ 'comments.author': memberId });
 
         // Extract comments from the watches
@@ -27,14 +26,13 @@ class memberController {
         });
         res.render('profile', {
             title: 'Profile',
-            membername,
             errors: [],
             comments,
         });
     }
     async editMemberInfo(req, res) {
         try {
-            const memberId = req.session.memberId; // Assuming you store the memberId in the session upon login
+            const memberId = res.locals.user._id; // Assuming you store the memberId in the session upon login
             const { username, newPassword, name, yob } = req.body;
             const membername = req.session.membername;
             const comments = await Comment.find({ author: memberId });
@@ -45,14 +43,22 @@ class memberController {
             if (newPassword.length > 0 && newPassword.length < 6) {
                 errors.push({ msg: 'Password must be at least 6 characters' });
             }
-            const currentYear = new Date().getFullYear();
-            if (isNaN(yob) || yob < 1900 || yob > currentYear) {
-                errors.push({ msg: `Year of birth must be between 1900 and ${currentYear}` });
+            if (yob) {
+                const currentYear = new Date().getFullYear();
+                if (isNaN(yob) || yob < 1900 || yob > currentYear) {
+                    errors.push({ msg: `Year of birth must be between 1900 and ${currentYear}` });
+                }
             }
             // Find the member by ID
             const member = await Member.findById(memberId);
             if (!member) {
                 errors.push({ msg: 'Member not found' });
+            }
+            if (username) {
+                const existingMember = await Member.findOne({ membername: username });
+                if (existingMember && existingMember._id.toString() !== memberId.toString()) {
+                    errors.push({ msg: 'Username already taken' });
+                }
             }
             if (errors.length > 0) {
                 res.render('profile', {
@@ -78,6 +84,9 @@ class memberController {
                 }
                 // Save the updated member information
                 await member.save();
+                const memberAfter = await Member.findById(memberId);
+                req.session.passport.user = memberAfter;
+                req.flash('success_msg', 'You are update profile successfully');
                 res.redirect('/profile');
             }
         } catch (error) {

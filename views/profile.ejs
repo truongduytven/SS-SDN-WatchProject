@@ -18,22 +18,36 @@
         <div class="columns">
             <div class="column is-half">
                 <section class="section">
-                    <a href="watches" class="button">Back to list watch</a>
+                    <a href="/watches" class="button">Back to list watch</a>
                     <br>
                     <br>
                     <h1 class="title has-text-centered">User Profile</h1>
                     <br>
                     <p class="subtitle has-text-centered">Username: <%= user.membername %>
-                    </p>
+                            <p class="subtitle has-text-centered">Name: <%= user.name %>
+                                    <p class="subtitle has-text-centered">Yob: <%= user.yob %>
+                                    </p>
+                                    <div class="alert is-success alert-dismissible has-text-centered" role="alert">
+                                        <% if(success_msg !='' ){ %>
+                                            <%= success_msg %>
+                                                <% } %>
+                                                    <% if(error_msg !='' ){ %>
+                                                        <%= error %>
+                                                            <% } %>
+
+                                                                <% if(error !='' ){ %>
+                                                                    <%= error %>
+                                                                        <% } %>
+                                    </div>
                 </section>
                 <section class="section">
                     <h1 class="subtitle has-text-centered">Edit profile</h1>
                     <% errors.forEach(function (error){ %>
-                        <div class="alert alert-warning alert-dismissible" role="alert">
+                        <div class="alert alert-warning alert-dismissible has-text-centered" role="alert">
                             <%= error.msg %>
                         </div>
                         <% }); %>
-                            <form action="/profile" method="post">
+                            <form action='/profile/<%= user._id %> ' method="post">
                                 <div class="field">
                                     <label class="label">New Username</label>
                                     <div class="control">
@@ -69,14 +83,14 @@
             </div>
             <div class="column is-haft">
                 <section class="section">
-                    <h1 class="subtitle">Comments by <%= membername %>
+                    <h1 class="subtitle">Comments by <%= user.name %>
                     </h1>
                     <% if(comments.length> 0) { %>
                         <% comments.forEach(comment=> { %>
                             <div class="box">
                                 <div class="columns">
                                     <div class="column">
-                                        <figure class="image is-128x128">
+                                        <figure class="image is-256x256">
                                             <img class="image-watch" src="<%= comment.watchImage %>"
                                                 alt="Image of <%= comment.watchName %>">
                                         </figure>
@@ -91,7 +105,7 @@
                                             </strong>
                                         </p>
                                         <p>Rating: <strong>
-                                                <%= comment.rating %>/5
+                                                <%= comment.rating %>/3
                                             </strong></p>
                                     </div>
                                 </div>
